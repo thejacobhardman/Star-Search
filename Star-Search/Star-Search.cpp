@@ -5,28 +5,89 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
+
+void getJudgeData(double& score) {
+	bool goodInput = false;
+	while (goodInput == false) {
+		cout << "Enter a judge's score: ";
+		cin >> score;
+		if (score > 10 || score < 0) {
+			cout << "Please enter a valid number between 0 and 10." << endl;
+		}
+		else {
+			goodInput = true;
+		}
+	}
+}
+
+int findLowest(int lowestNum, double scores[]) {
+
+	for (int i = 0; i < 5; i++) {
+		if (scores[i] < scores[i + 1] && scores[i] < lowestNum) {
+			lowestNum = i;
+		}
+	}
+
+	return lowestNum;
+}
+
+int findHighest(int highestNum, double scores[]) {
+
+	for (int i = 0; i < 5; i++) {
+		if (scores[i] > scores[i + 1] && scores[i] > highestNum) {
+			highestNum = i;
+		}
+	}
+
+	return highestNum;
+}
+
+void calcScore(double& finalScore, double newScores[]) {
+	double sum = 0;
+	for (int i = 0; i < 3; i++) {
+		sum += newScores[i];
+	}
+
+	finalScore = sum / 3.0;
+}
 
 void main()
 {
 	bool isRunning = true;
 	string userInput;
-
 	
 	while (isRunning) {
 
-		double scores[5] = {0, 0, 0, 0, 0};
+		double scores[5], finalScore;
+		int highestNum = 0, lowestNum = 10;
 		
 		for (int i = 0; i < 5; i++) {
 			getJudgeData(scores[i]);
 		}
 
+		lowestNum = findLowest(lowestNum, scores);
+		highestNum = findHighest(highestNum, scores);
 
-
+		vector<double> dynamicScores = { 0, 0, 0, 0, 0 };
 		for (int i = 0; i < 5; i++) {
-			calcScore(scores[i]);
+			dynamicScores[i] = scores[i];
 		}
+
+		dynamicScores.erase(dynamicScores.begin() + lowestNum);
+		dynamicScores.erase(dynamicScores.begin() + highestNum - 1);
+
+		dynamicScores.resize(3);
+
+		double newScores[3];
+		copy(dynamicScores.begin(), dynamicScores.end(), newScores);
+
+		calcScore(finalScore, newScores);
+
+		cout << "After dropping the highest and lowest scores, the average score was: " << finalScore << endl;
 
 		bool userConfirm = false;
 		while (userConfirm == false) {
@@ -45,23 +106,4 @@ void main()
 			}
 		}
 	}
-}
-
-void getJudgeData(double& score) {
-	do {
-		cout << "Enter a judge's score: ";
-		cin >> score;
-	} while (score > 10 && score < 0);
-}
-
-void calcScore(double& score) {
-	cout << "Blah";
-}
-
-int findLowest() {
-	return 0;
-}
-
-int findHighest() {
-	return 0;
 }
