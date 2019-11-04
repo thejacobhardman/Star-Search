@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -47,12 +48,12 @@ int findHighest(int highestNum, double scores[]) {
 }
 
 void calcScore(double& finalScore, double newScores[]) {
-	double sum = 0;
+	double sum = 0.0;
 	for (int i = 0; i < 3; i++) {
 		sum += newScores[i];
 	}
 
-	finalScore = sum / 3.0;
+	finalScore = (sum / 3.0);
 }
 
 void main()
@@ -62,7 +63,7 @@ void main()
 	
 	while (isRunning) {
 
-		double scores[5], finalScore;
+		double scores[5], finalScore = 0.0;
 		int highestNum = 0, lowestNum = 10;
 		
 		for (int i = 0; i < 5; i++) {
@@ -87,7 +88,7 @@ void main()
 
 		calcScore(finalScore, newScores);
 
-		cout << "After dropping the highest and lowest scores, the average score was: " << finalScore << endl;
+		cout << setprecision(1) << "After dropping the highest and lowest scores, the average score was: " << finalScore << endl;
 
 		bool userConfirm = false;
 		while (userConfirm == false) {
