@@ -27,24 +27,26 @@ void getJudgeData(double& score) {
 
 int findLowest(int lowestNum, double scores[]) {
 
+	int lowestNumAddress = 0;
 	for (int i = 0; i < 5; i++) {
-		if (scores[i] < scores[i + 1] && scores[i] < lowestNum) {
-			lowestNum = i;
+		if (scores[i] < lowestNum) {
+			lowestNumAddress = i;
 		}
 	}
 
-	return lowestNum;
+	return lowestNumAddress;
 }
 
 int findHighest(int highestNum, double scores[]) {
 
+	int highestNumAddress = 0;
 	for (int i = 0; i < 5; i++) {
-		if (scores[i] > scores[i + 1] && scores[i] > highestNum) {
-			highestNum = i;
+		if (scores[i] > highestNum) {
+			highestNumAddress = i;
 		}
 	}
 
-	return highestNum;
+	return highestNumAddress;
 }
 
 void calcScore(double& finalScore, double newScores[]) {
@@ -64,22 +66,23 @@ void main()
 	while (isRunning) {
 
 		double scores[5], finalScore = 0.0;
-		int highestNum = 0, lowestNum = 10;
 		
 		for (int i = 0; i < 5; i++) {
 			getJudgeData(scores[i]);
 		}
 
+		int highestNum = scores[0], lowestNum = scores[0];
+
 		lowestNum = findLowest(lowestNum, scores);
 		highestNum = findHighest(highestNum, scores);
 
-		vector<double> dynamicScores = { 0, 0, 0, 0, 0 };
+		vector<double> dynamicScores = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		for (int i = 0; i < 5; i++) {
 			dynamicScores[i] = scores[i];
 		}
 
 		dynamicScores.erase(dynamicScores.begin() + lowestNum);
-		dynamicScores.erase(dynamicScores.begin() + highestNum - 1);
+		dynamicScores.erase(dynamicScores.begin() + highestNum);
 
 		dynamicScores.resize(3);
 
@@ -88,7 +91,7 @@ void main()
 
 		calcScore(finalScore, newScores);
 
-		cout << setprecision(1) << "After dropping the highest and lowest scores, the average score was: " << finalScore << endl;
+		cout << fixed << setprecision(1) << "After dropping the highest and lowest scores, the average score was: " << finalScore << endl;
 
 		bool userConfirm = false;
 		while (userConfirm == false) {
